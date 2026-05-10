@@ -1,0 +1,22 @@
+name: Deploy Backend - Render
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do projeto
+        uses: actions/checkout@v3
+
+      - name: Instalar dependências
+        run: npm install
+
+      - name: Deploy no Render
+        run: |
+          curl -X POST https://api.render.com/deploy/srv-${{ secrets.SERVICE_ID }} \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
