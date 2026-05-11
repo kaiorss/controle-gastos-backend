@@ -18,5 +18,5 @@ jobs:
 
       - name: Deploy no Render
         run: |
-          curl -X POST https://api.render.com/deploy/srv-${{ secrets.SERVICE_ID }} \
+          curl -X POST https://api.render.com/deploy/${{ secrets.SERVICE_ID }} \
           -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}"
