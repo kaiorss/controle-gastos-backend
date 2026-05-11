@@ -39,9 +39,10 @@ let gastos = [
 // Health Check
 app.get("/", (req, res) => {
   res.json({
-    status: "API de Controle de Gastos rodando",
-    versao: "1.0.0",
-    cors_ativo: true
+    status: "Backend de Notícias rodando com CI/CD",
+    versao: "1.0.1",
+    cors_ativo: true,
+    frontend_integrado: true
   });
 });
 
@@ -51,7 +52,7 @@ app.get("/gastos", (req, res) => {
     mensagem: "Gastos carregados",
     total: gastos.length,
     gastos
-  });
+  });   
 });
 
 // GET: gasto por ID
