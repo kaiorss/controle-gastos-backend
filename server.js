@@ -49,7 +49,7 @@ app.get("/", (req, res) => {
 // GET: listar todos os gastos
 app.get("/gastos", (req, res) => {
   res.json({
-    mensagem: "Gastos carregados",
+    mensagem: "Gastos carregados com sucesso",
     total: gastos.length,
     gastos
   });   
