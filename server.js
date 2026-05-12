@@ -21,7 +21,7 @@ let gastos = [
   {
     id: 1,
     descricao: "Mercado",
-    valor: 120.50,
+    valor: 120.00,
     categoria: "Alimentação",
     pago: true,
     data: "2026-05-10"
