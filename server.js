@@ -46,6 +46,24 @@ app.get("/", (req, res) => {
   });
 });
 
+
+// ===============================
+// ROTA V1
+// ===============================
+app.get("/v1", (req, res) => {
+
+  const datahora = new Date().toLocaleString("pt-BR", {
+    timeZone: "America/Sao_Paulo"
+  });
+
+  res.json({
+    message: "Api v1 respondendo no container docker...",
+    chamada_em: datahora
+  });
+
+});
+
+
 // GET: listar todos os gastos
 app.get("/gastos", (req, res) => {
   res.json({
@@ -55,18 +73,6 @@ app.get("/gastos", (req, res) => {
   });   
 });
 
-// GET: gasto por ID
-app.get("/gastos/:id", (req, res) => {
-  const gasto = gastos.find(g => g.id == req.params.id);
-
-  if (!gasto) {
-    return res.status(404).json({
-      erro: "Gasto não encontrado"
-    });
-  }
-
-  res.json(gasto);
-});
 
 // GET: resumo financeiro
 app.get("/gastos/resumo", (req, res) => {
@@ -88,6 +94,24 @@ app.get("/gastos/resumo", (req, res) => {
     total_pendente: totalPendente
   });
 });
+
+
+// GET: gasto por ID
+app.get("/gastos/:id", (req, res) => {
+
+  const gasto = gastos.find(
+    g => g.id == req.params.id
+  );
+
+  if (!gasto) {
+    return res.status(404).json({
+      erro: "Gasto não encontrado"
+    });
+  }
+
+  res.json(gasto);
+});
+
 
 // POST: criar gasto
 app.post("/gastos", (req, res) => {
@@ -118,7 +142,9 @@ app.post("/gastos", (req, res) => {
     mensagem: "Gasto cadastrado com sucesso",
     gasto: novoGasto
   });
+
 });
+
 
 // PUT: marcar gasto como pago
 app.put("/gastos/:id/pagar", (req, res) => {
@@ -139,7 +165,9 @@ app.put("/gastos/:id/pagar", (req, res) => {
     mensagem: "Gasto marcado como pago",
     gasto
   });
+
 });
+
 
 // DELETE: remover gasto
 app.delete("/gastos/:id", (req, res) => {
@@ -159,8 +187,11 @@ app.delete("/gastos/:id", (req, res) => {
   res.json({
     mensagem: "Gasto removido com sucesso"
   });
+
 });
 
+
+// inicia servidor
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
   console.log(`CORS habilitado para: ${corsOptions.origin}`);
