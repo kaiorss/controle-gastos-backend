@@ -21,7 +21,7 @@ run npm install --omit=dev
 copy . .
 
 # define uma variável de ambiente padrão chamada PORT
-# neste projeto, a aplicação usará a porta 5000 por padrão
+# no render, a plataforma também pode definir essa variável automaticamente
 env PORT=5000
 
 # informa que o container utiliza a porta 5000
