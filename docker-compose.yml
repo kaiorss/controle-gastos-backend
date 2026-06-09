@@ -1,0 +1,21 @@
+# define os serviços que serão executados pelo docker compose
+services:
+  # nome do serviço
+  # neste caso, estamos criando um serviço chamado api
+  api:
+    # indica que a imagem será construída usando o dockerfile da pasta atual
+    build: .
+
+    # define um nome fixo para o container
+    # isso facilita comandos como docker stop e docker rm
+    container_name: api-back
+
+    # mapeia a porta do ambiente externo para a porta interna do container
+    # formato: "porta_externa:porta_interna"
+    ports:
+      - "5000:5000"
+
+    # define variáveis de ambiente dentro do container
+    # aqui informamos que a aplicação deve usar a porta 5000
+    environment:
+      - PORT=5000
