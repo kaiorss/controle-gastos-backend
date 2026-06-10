@@ -4,19 +4,17 @@ const cors = require("cors");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+
+// ===============================
+// MIDDLEWARES
+// ===============================
+app.use(cors());
 app.use(express.json());
 
-// CORS configurado para aceitar frontend da Vercel
-const corsOptions = {
-  origin: process.env.CORS_ORIGIN || "*",
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Content-Type,Authorization"
-};
 
-app.use(cors(corsOptions));
-
-// Banco de dados fictício
+// ===============================
+// BANCO DE DADOS FICTÍCIO
+// ===============================
 let gastos = [
   {
     id: 1,
@@ -36,163 +34,255 @@ let gastos = [
   }
 ];
 
-// Health Check
+
+// ===============================
+// ROTA PRINCIPAL
+// ===============================
 app.get("/", (req, res) => {
+
   res.json({
-    status: "Backend de Notícias rodando com CI/CD",
-    versao: "1.0.1",
-    cors_ativo: true,
-    frontend_integrado: true
+    status: "Backend rodando no Docker",
+    versao: "1.0.2",
+    cors_ativo: true
   });
+
 });
 
 
 // ===============================
-// ROTA V1
+// TESTE API V1
 // ===============================
 app.get("/v1", (req, res) => {
 
-  const datahora = new Date().toLocaleString("pt-BR", {
-    timeZone: "America/Sao_Paulo"
-  });
+  const datahora = new Date().toLocaleString(
+    "pt-BR",
+    {
+      timeZone: "America/Sao_Paulo"
+    }
+  );
 
   res.json({
-    message: "Api v1 respondendo no container docker...",
+    message: "API v1 respondendo no container Docker",
     chamada_em: datahora
   });
 
 });
 
 
-// GET: listar todos os gastos
+// ===============================
+// LISTAR GASTOS
+// ===============================
 app.get("/gastos", (req, res) => {
+
   res.json({
-    mensagem: "Gastos carregados com sucesso 1.0.2",
+    mensagem: "Gastos carregados com sucesso",
     total: gastos.length,
     gastos
-  });   
+  });
+
 });
 
 
-// GET: resumo financeiro
+// ===============================
+// RESUMO FINANCEIRO
+// ===============================
 app.get("/gastos/resumo", (req, res) => {
+
 
   const totalGasto = gastos.reduce(
     (total, gasto) => total + gasto.valor,
     0
   );
 
+
   const totalPago = gastos
     .filter(gasto => gasto.pago)
-    .reduce((total, gasto) => total + gasto.valor, 0);
+    .reduce(
+      (total, gasto) => total + gasto.valor,
+      0
+    );
 
-  const totalPendente = totalGasto - totalPago;
+
+  const totalPendente =
+    totalGasto - totalPago;
+
 
   res.json({
+
     total_gasto: totalGasto,
+
     total_pago: totalPago,
+
     total_pendente: totalPendente
+
   });
+
 });
 
 
-// GET: gasto por ID
+// ===============================
+// BUSCAR GASTO POR ID
+// ===============================
 app.get("/gastos/:id", (req, res) => {
+
 
   const gasto = gastos.find(
     g => g.id == req.params.id
   );
 
+
   if (!gasto) {
+
     return res.status(404).json({
+
       erro: "Gasto não encontrado"
+
     });
+
   }
 
+
   res.json(gasto);
+
+
 });
 
 
-// POST: criar gasto
+// ===============================
+// CADASTRAR GASTO
+// ===============================
 app.post("/gastos", (req, res) => {
+
 
   const { descricao, valor, categoria } = req.body;
 
+
   if (!descricao || !valor || !categoria) {
+
     return res.status(400).json({
+
       erro: "Descrição, valor e categoria são obrigatórios"
+
     });
+
   }
 
+
   const novoGasto = {
+
     id: gastos.length > 0
       ? Math.max(...gastos.map(g => g.id)) + 1
       : 1,
 
     descricao,
+
     valor: Number(valor),
+
     categoria,
+
     pago: false,
-    data: new Date().toISOString().split("T")[0]
+
+    data: new Date()
+      .toISOString()
+      .split("T")[0]
+
   };
+
 
   gastos.push(novoGasto);
 
+
   res.status(201).json({
+
     mensagem: "Gasto cadastrado com sucesso",
+
     gasto: novoGasto
+
   });
+
 
 });
 
 
-// PUT: marcar gasto como pago
+// ===============================
+// MARCAR COMO PAGO
+// ===============================
 app.put("/gastos/:id/pagar", (req, res) => {
+
 
   const gasto = gastos.find(
     g => g.id == req.params.id
   );
 
+
   if (!gasto) {
+
     return res.status(404).json({
+
       erro: "Gasto não encontrado"
+
     });
+
   }
+
 
   gasto.pago = true;
 
+
   res.json({
+
     mensagem: "Gasto marcado como pago",
+
     gasto
+
   });
+
 
 });
 
 
-// DELETE: remover gasto
+// ===============================
+// REMOVER GASTO
+// ===============================
 app.delete("/gastos/:id", (req, res) => {
+
 
   const index = gastos.findIndex(
     g => g.id == req.params.id
   );
 
+
   if (index === -1) {
+
     return res.status(404).json({
+
       erro: "Gasto não encontrado"
+
     });
+
   }
+
 
   gastos.splice(index, 1);
 
+
   res.json({
+
     mensagem: "Gasto removido com sucesso"
+
   });
+
 
 });
 
 
-// inicia servidor
+// ===============================
+// START SERVER
+// ===============================
 app.listen(PORT, () => {
+
   console.log(`Servidor rodando na porta ${PORT}`);
-  console.log(`CORS habilitado para: ${corsOptions.origin}`);
+
+  console.log("CORS liberado");
+
 });
